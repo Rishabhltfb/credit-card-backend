@@ -12,7 +12,7 @@ import { UserEntity } from '../../user/entities/user.entity';
 @Entity('accounts')
 @Unique(['customer_id'])
 export class AccountEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   account_id: string;
 
   @OneToOne(() => UserEntity, { nullable: false })
