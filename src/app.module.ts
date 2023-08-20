@@ -6,6 +6,7 @@ import { DB_CONSTANTS, STAGING_ENV } from './util/constant/app.contant';
 import { STRING_CONSTANTS } from './util/constant/string.constant';
 import { AccountModule } from './account/account.module';
 import { UserModule } from './user/user.module';
+import { OfferModule } from './offer/offer.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './user/user.module';
       envFilePath: [`.env.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
     }),
+    OfferModule,
     AccountModule,
     UserModule,
     TypeOrmModule.forRootAsync({
