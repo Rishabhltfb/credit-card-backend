@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomError } from 'src/error/error.interface';
 import { AccountService } from 'src/account/services/account.service';
@@ -44,12 +40,24 @@ export class OfferService {
       return true;
     } catch (err) {
       this.logger.error(err);
-      throw new InternalServerErrorException();
+      return new CustomError(
+        '9089',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
     }
   }
 
   public async findOfferById(id: string): Promise<OfferEntity | CustomError> {
-    return this.offerRepository.findOfferById(id);
+    try {
+      return this.offerRepository.findOfferById(id);
+    } catch (err) {
+      return new CustomError(
+        '7273',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
+    }
   }
 
   public async createOffer(

@@ -1,12 +1,13 @@
+import { ConflictException, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CustomError } from 'src/error/error.interface';
 import {
-  ConflictException,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+  ERROR_MSG_CONSTANTS,
+  ERROR_STATUS_CONSTANTS,
+} from 'src/util/constant/error.constant';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/user.dto';
 import { UserEntity } from '../entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -19,7 +20,9 @@ export class UserRepository extends Repository<UserEntity> {
     super();
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async createUser(
+    createUserDto: CreateUserDto,
+  ): Promise<UserEntity | CustomError> {
     const { name, email } = createUserDto;
     const userObj = { name, email };
     const user = this.userModel.create(userObj);
@@ -33,11 +36,15 @@ export class UserRepository extends Repository<UserEntity> {
       if (error.code === '23505') {
         throw new ConflictException('user already exists!');
       } else {
-        throw new InternalServerErrorException();
+        return new CustomError(
+          '5583',
+          ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+          ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+        );
       }
     }
   }
-  async findUserById(userId: string): Promise<UserEntity> {
+  async findUserById(userId: string): Promise<UserEntity | CustomError> {
     try {
       return await this.userModel.findOne({ id: userId });
     } catch (error) {
@@ -45,7 +52,11 @@ export class UserRepository extends Repository<UserEntity> {
         `Failed to find user: ${JSON.stringify(userId)} err: ${error}`,
         error.stack,
       );
-      throw new InternalServerErrorException();
+      return new CustomError(
+        '3238',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
     }
   }
 }

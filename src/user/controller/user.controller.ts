@@ -12,7 +12,9 @@ export class UserController {
 
   @Post('/create')
   @CustomErrorInterceptor()
-  createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
+  createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<UserEntity | CustomError> {
     this.logger.debug(createUserDto);
     return this.userService.createUser(createUserDto);
   }

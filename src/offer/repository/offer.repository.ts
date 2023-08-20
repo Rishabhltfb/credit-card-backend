@@ -1,9 +1,13 @@
-import { InternalServerErrorException, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountEntity } from 'src/account/entities/account.entity';
 import { CustomError } from 'src/error/error.interface';
+import {
+  ERROR_MSG_CONSTANTS,
+  ERROR_STATUS_CONSTANTS,
+} from 'src/util/constant/error.constant';
 import { CreateOfferDto } from '../dtos/offer.dto';
 import { OfferEntity } from '../entities/offer.entity';
 
@@ -25,18 +29,30 @@ export class OfferRepository extends Repository<OfferEntity> {
         `Failed to find offer: ${JSON.stringify(offerId)} err: ${error}`,
         error.stack,
       );
-      throw new InternalServerErrorException();
+      return new CustomError(
+        '9283',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
     }
   }
 
-  async updateOffer(newOffer: OfferEntity): Promise<OfferEntity> {
-    return this.offerModel.save(newOffer);
+  async updateOffer(newOffer: OfferEntity): Promise<OfferEntity | CustomError> {
+    try {
+      return this.offerModel.save(newOffer);
+    } catch (err) {
+      return new CustomError(
+        '4283',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
+    }
   }
 
   async createOffer(
     createOfferDto: CreateOfferDto,
     account: AccountEntity,
-  ): Promise<OfferEntity> {
+  ): Promise<OfferEntity | CustomError> {
     const {
       limitType: limit_type,
       newLimit: new_limit,
@@ -59,7 +75,11 @@ export class OfferRepository extends Repository<OfferEntity> {
         `Failed to create offer: ${JSON.stringify(offerObj)} err: ${error}`,
         error.stack,
       );
-      throw new InternalServerErrorException();
+      return new CustomError(
+        '9184',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
     }
   }
 }

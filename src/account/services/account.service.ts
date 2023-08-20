@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomError } from 'src/error/error.interface';
 import { CreateAccountDto, UpdateAccountDto } from '../dtos/account.dto';
@@ -87,7 +83,11 @@ export class AccountService {
       return newAccountDetails;
     } catch (err) {
       this.logger.error(err);
-      throw new InternalServerErrorException();
+      return new CustomError(
+        '8272',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
     }
   }
 
@@ -106,9 +106,8 @@ export class AccountService {
         ERROR_MSG_CONSTANTS.ACCOUNT_CREATION_FAILED,
       );
     const { customerId: customer_id } = createAccountDto;
-    const customer: UserEntity = await this.userRepository.findUserById(
-      customer_id,
-    );
+    const customer = await this.userRepository.findUserById(customer_id);
+    if (customer instanceof CustomError) return customer;
     if (!customer) {
       return new CustomError(
         '2737',

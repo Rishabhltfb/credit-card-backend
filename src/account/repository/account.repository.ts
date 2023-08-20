@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { ConflictException, Logger } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 
 import { AccountEntity } from '../entities/account.entity';
@@ -31,20 +27,32 @@ export class AccountRepository extends Repository<AccountEntity> {
         `Failed to find account: ${JSON.stringify(accountId)} err: ${error}`,
         error.stack,
       );
-      throw new InternalServerErrorException();
+      return new CustomError(
+        '1827',
+        'findAccountById',
+        'Unable to find account by id',
+      );
     }
   }
 
   async updateAccount(
     newAccountDetails: AccountEntity,
-  ): Promise<AccountEntity> {
-    return this.accountModel.save(newAccountDetails);
+  ): Promise<AccountEntity | CustomError> {
+    try {
+      return this.accountModel.save(newAccountDetails);
+    } catch (err) {
+      return new CustomError(
+        '1828',
+        'updateAccount',
+        'Unable to update account ',
+      );
+    }
   }
 
   async createAccount(
     createAccountDto: CreateAccountDto,
     customer: UserEntity,
-  ): Promise<AccountEntity> {
+  ): Promise<AccountEntity | CustomError> {
     const {
       accountLimit: account_limit,
       perTransactionLimit: per_transaction_limit,
@@ -68,7 +76,11 @@ export class AccountRepository extends Repository<AccountEntity> {
       if (error.code === '23505') {
         throw new ConflictException('Account already exists!');
       } else {
-        throw new InternalServerErrorException();
+        return new CustomError(
+          '1829',
+          'createAccount',
+          'Unable to create account ',
+        );
       }
     }
   }

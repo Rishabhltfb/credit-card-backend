@@ -13,7 +13,9 @@ export class UserService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async createUser(
+    createUserDto: CreateUserDto,
+  ): Promise<UserEntity | CustomError> {
     return this.userRepository.createUser(createUserDto);
   }
 
