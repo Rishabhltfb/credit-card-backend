@@ -30,6 +30,8 @@ $ docker run --name vegapay-db -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d pos
 ## Test
 
 ```bash
+# api testing via postman
+$ postman collection present in the root of the project (Vegapay.postman_collection.json)
 # unit tests
 $ npm run test
 ```
