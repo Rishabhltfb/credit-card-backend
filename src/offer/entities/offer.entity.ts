@@ -7,16 +7,12 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { AccountEntity } from '../../account/entities/account.entity';
-
-export enum LimitTypeEnum {
-  ACCOUNT_LIMIT = 'ACCOUNT_LIMIT',
-  PER_TRANSACTION_LIMIT = 'PER_TRANSACTION_LIMIT',
-}
+import { LimitTypeEnum, OfferStatusEnum } from '../enum/offer.enum';
 
 @Entity()
 export class OfferEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ManyToOne(() => AccountEntity, { nullable: false })
   @JoinColumn()
@@ -28,6 +24,13 @@ export class OfferEntity {
     nullable: false,
   })
   limit_type: LimitTypeEnum;
+
+  @Column({
+    type: 'enum',
+    enum: OfferStatusEnum,
+    default: OfferStatusEnum.PENDING,
+  })
+  status: OfferStatusEnum;
 
   @Column({ type: 'numeric', nullable: false })
   new_limit: number;
