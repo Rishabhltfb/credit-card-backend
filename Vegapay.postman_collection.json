@@ -1,0 +1,296 @@
+{
+	"info": {
+		"_postman_id": "e0f22647-cb3d-48a3-998c-09e40209add3",
+		"name": "Vegapay",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17285503"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rishabh\",\n  \"email\": \"rishabh2@email.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/user/create",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rishabh\",\n  \"email\": \"rishabh@email.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/user/fetch/c49b7698-5a85-4845-8ddc-76e7594b5e1b",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"user",
+								"fetch",
+								"c49b7698-5a85-4845-8ddc-76e7594b5e1b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"c49b7698-5a85-4845-8ddc-76e7594b5e1b\",\n  \"accountLimit\": 50000,\n  \"perTransactionLimit\": 10000\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/account",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account Limit",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \n  \"newPerTransactionLimit\": 11000\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/account/f82a940d-005d-4582-890f-33359f5ef3d5",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"account",
+								"f82a940d-005d-4582-890f-33359f5ef3d5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch account by Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rishabh\",\n  \"email\": \"rishabh@email.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/account/fetch/f82a940d-005d-4582-890f-33359f5ef3d5",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"account",
+								"fetch",
+								"f82a940d-005d-4582-890f-33359f5ef3d5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Limit Offer",
+			"item": [
+				{
+					"name": "Create Limit Offer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\": \"f82a940d-005d-4582-890f-33359f5ef3d5\",\n  \"limitType\": \"PER_TRANSACTION_LIMIT\",\n  \"newLimit\": 12000,\n  \"offerActivationTime\": \"2023-08-20T18:00:00.000Z\",\n  \"offerExpiryTime\": \"2023-08-18T18:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/offer",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"offer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Offer Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PENDING\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/offer/e6e3d4e8-3c94-4710-b00e-2d42d4e46fbf",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"offer",
+								"e6e3d4e8-3c94-4710-b00e-2d42d4e46fbf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get offer by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\": \"f82a940d-005d-4582-890f-33359f5ef3d5\",\n  \"limitType\": \"PER_TRANSACTION_LIMIT\",\n  \"newLimit\": 12000,\n  \"offerActivationTime\": \"2023-08-20T18:00:00.000Z\",\n  \"offerExpiryTime\": \"2023-08-18T18:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/offer/fetch?id=e6e3d4e8-3c94-4710-b00e-2d42d4e46fbf",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"offer",
+								"fetch"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "e6e3d4e8-3c94-4710-b00e-2d42d4e46fbf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Active Offer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\": \"f82a940d-005d-4582-890f-33359f5ef3d5\",\n  \"limitType\": \"PER_TRANSACTION_LIMIT\",\n  \"newLimit\": 12000,\n  \"offerActivationTime\": \"2023-08-20T18:00:00.000Z\",\n  \"offerExpiryTime\": \"2023-08-18T18:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/offer/active?accountId=e6e3d4e8-3c94-4710-b00e-2d42d4e46fbf&activeDate=2023-08-20 22:30:00",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"offer",
+								"active"
+							],
+							"query": [
+								{
+									"key": "accountId",
+									"value": "e6e3d4e8-3c94-4710-b00e-2d42d4e46fbf"
+								},
+								{
+									"key": "activeDate",
+									"value": "2023-08-20 22:30:00"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
