@@ -6,9 +6,11 @@ export class ERROR_STATUS_CONSTANTS {
   static INVALID_OFFER_STATUS = 'INVALID_OFFER_STATUS';
   static EXPIRY_TIME_ERROR = 'EXPIRY_TIME_ERROR';
   static SOMETHING_WENT_WRONG = 'SOMETHING_WENT_WRONG';
+  static INVALID_DATE_FORMAT = 'INVALID_DATE_FORMAT';
 }
 export class ERROR_MSG_CONSTANTS {
   static ACCOUNT_CREATION_FAILED = 'Account creation checks failed!';
+  static INVALID_DATE_FORMAT = 'Invalid date format!';
   static SOMETHING_WENT_WRONG_MSG =
     'Hmm... Somthing is fishy here, no issues I can take care of it, just inform me!';
   static EXPIRY_TIME_ERROR_MSG =

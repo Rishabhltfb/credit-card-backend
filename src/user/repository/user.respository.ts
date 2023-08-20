@@ -34,7 +34,7 @@ export class UserRepository extends Repository<UserEntity> {
         error.stack,
       );
       if (error.code === '23505') {
-        throw new ConflictException('user already exists!');
+        return new CustomError('2393', 'createUser', 'User already exists');
       } else {
         return new CustomError(
           '5583',

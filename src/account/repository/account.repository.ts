@@ -74,7 +74,11 @@ export class AccountRepository extends Repository<AccountEntity> {
         error.stack,
       );
       if (error.code === '23505') {
-        throw new ConflictException('Account already exists!');
+        return new CustomError(
+          '2350',
+          'createAccount',
+          'Account already exists! ',
+        );
       } else {
         return new CustomError(
           '1829',

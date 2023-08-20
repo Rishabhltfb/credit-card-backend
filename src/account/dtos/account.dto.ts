@@ -15,11 +15,7 @@ export class CreateAccountDto {
 }
 
 export class UpdateAccountDto {
-  @IsNumber()
-  @Min(1)
-  newAccountLimit: number;
+  newAccountLimit?: number;
 
-  @IsNumber()
-  @Min(1)
-  newPerTransactionLimit: number;
+  newPerTransactionLimit?: number;
 }
