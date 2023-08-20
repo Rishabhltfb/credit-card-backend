@@ -1,11 +1,5 @@
-import {
-  IsDate,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { LimitTypeEnum, OfferStatusEnum } from '../enum/offer.enum';
 
 export class CreateOfferDto {
@@ -20,9 +14,10 @@ export class CreateOfferDto {
   @Min(1)
   newLimit: number;
 
+  @Transform(({ value }) => new Date(value), { toClassOnly: true })
   offerActivationTime?: Date;
 
-  @IsDate()
+  @Transform(({ value }) => new Date(value), { toClassOnly: true })
   offerExpiryTime: Date;
 }
 export class UpdateOfferStatusDto {

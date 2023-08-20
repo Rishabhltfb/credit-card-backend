@@ -1,5 +1,10 @@
 import { Logger } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
+import {
+  EntityRepository,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountEntity } from 'src/account/entities/account.entity';
@@ -10,6 +15,7 @@ import {
 } from 'src/util/constant/error.constant';
 import { CreateOfferDto } from '../dtos/offer.dto';
 import { OfferEntity } from '../entities/offer.entity';
+import { OfferStatusEnum } from '../enum/offer.enum';
 
 @EntityRepository(OfferEntity)
 export class OfferRepository extends Repository<OfferEntity> {
@@ -31,6 +37,34 @@ export class OfferRepository extends Repository<OfferEntity> {
       );
       return new CustomError(
         '9283',
+        ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+        ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+      );
+    }
+  }
+
+  async fetchActiveOffersByAccount(
+    account: AccountEntity,
+    activeDate: Date,
+  ): Promise<OfferEntity[] | CustomError> {
+    try {
+      return await this.offerModel.find({
+        where: {
+          account_id: account,
+          status: OfferStatusEnum.PENDING,
+          offer_activation_time: LessThanOrEqual(activeDate),
+          offer_expiry_time: MoreThanOrEqual(activeDate),
+        },
+      });
+    } catch (error) {
+      this.logger.error(
+        `Failed to find active offers: ${JSON.stringify(
+          account,
+        )} err: ${error}`,
+        error.stack,
+      );
+      return new CustomError(
+        '6686',
         ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
         ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
       );
