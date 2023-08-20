@@ -5,7 +5,7 @@ import { UserEntity } from '../entities/user.entity';
 
 @Controller('user')
 export class UserController {
-  private logger = new Logger('UserRepository');
+  private logger = new Logger(UserController.name);
   constructor(private userService: UserService) {}
 
   @Post('/create')

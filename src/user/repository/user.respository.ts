@@ -37,4 +37,15 @@ export class UserRepository extends Repository<UserEntity> {
       }
     }
   }
+  async findUserById(userId: string): Promise<UserEntity> {
+    try {
+      return await this.userModel.findOne({ id: userId });
+    } catch (error) {
+      this.logger.error(
+        `Failed to find user: ${JSON.stringify(userId)} err: ${error}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
+    }
+  }
 }
