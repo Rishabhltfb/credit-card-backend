@@ -12,6 +12,7 @@ import { CustomError } from 'src/error/error.interface';
 import { OfferService } from '../services/offer.service';
 import { CreateOfferDto, UpdateOfferStatusDto } from '../dtos/offer.dto';
 import { OfferEntity } from '../entities/offer.entity';
+import { CustomErrorInterceptor } from 'src/util/decorator/custom-error.decorator';
 
 @Controller('offer')
 export class OfferController {
@@ -19,6 +20,7 @@ export class OfferController {
   constructor(private offerService: OfferService) {}
 
   @Post()
+  @CustomErrorInterceptor()
   async createOffer(
     @Body() createOfferDto: CreateOfferDto,
   ): Promise<OfferEntity | CustomError> {
@@ -27,12 +29,14 @@ export class OfferController {
   }
 
   @Get('fetch')
+  @CustomErrorInterceptor()
   getOfferById(@Query('id') id: string): Promise<OfferEntity | CustomError> {
     this.logger.debug(id);
     return this.offerService.findOfferById(id);
   }
 
   @Patch('/:id')
+  @CustomErrorInterceptor()
   updateAccountLimits(
     @Param('id') id: string,
     @Body() updateOfferStatusDto: UpdateOfferStatusDto,

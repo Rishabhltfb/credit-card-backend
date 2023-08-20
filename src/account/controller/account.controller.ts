@@ -11,6 +11,7 @@ import { CustomError } from 'src/error/error.interface';
 import { CreateAccountDto, UpdateAccountDto } from '../dtos/account.dto';
 import { AccountService } from '../services/account.service';
 import { AccountEntity } from '../entities/account.entity';
+import { CustomErrorInterceptor } from 'src/util/decorator/custom-error.decorator';
 
 @Controller('account')
 export class AccountController {
@@ -18,6 +19,7 @@ export class AccountController {
   constructor(private accountService: AccountService) {}
 
   @Post()
+  @CustomErrorInterceptor()
   async createAccount(
     @Body() createAccountDto: CreateAccountDto,
   ): Promise<AccountEntity | CustomError> {
@@ -26,6 +28,7 @@ export class AccountController {
   }
 
   @Get('fetch/:accountId')
+  @CustomErrorInterceptor()
   getAccountById(
     @Param('accountId') accountId: string,
   ): Promise<AccountEntity | CustomError> {
@@ -34,6 +37,7 @@ export class AccountController {
   }
 
   @Patch('/:id')
+  @CustomErrorInterceptor()
   updateAccountLimits(
     @Param('id') id: string,
     @Body() updateAccountDto: UpdateAccountDto,
