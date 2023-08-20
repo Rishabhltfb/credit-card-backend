@@ -5,11 +5,6 @@ export class CreateAccountDto {
 }
 
 export class UpdateAccountDto {
-  customerId: string;
-  accountLimit: number;
-  perTransactionLimit: number;
-  lastAccountLimit?: number;
-  lastperTransactionLimit?: number;
-  accountLimitUpdateTime?: Date;
-  perTransactionLimitUpdateTime?: Date;
+  newAccountLimit: number;
+  newPerTransactionLimit: number;
 }
