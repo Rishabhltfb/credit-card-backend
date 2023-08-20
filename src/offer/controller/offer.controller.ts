@@ -13,6 +13,10 @@ import { OfferService } from '../services/offer.service';
 import { CreateOfferDto, UpdateOfferStatusDto } from '../dtos/offer.dto';
 import { OfferEntity } from '../entities/offer.entity';
 import { CustomErrorInterceptor } from 'src/util/decorator/custom-error.decorator';
+import {
+  ERROR_MSG_CONSTANTS,
+  ERROR_STATUS_CONSTANTS,
+} from 'src/util/constant/error.constant';
 
 @Controller('offer')
 export class OfferController {
@@ -35,12 +39,46 @@ export class OfferController {
     return this.offerService.findOfferById(id);
   }
 
+  @Get('active')
+  @CustomErrorInterceptor()
+  getActiveOffersForAccount(
+    @Query('accountId') accountId: string,
+    @Query('activeDate') activeDateStr: string,
+  ): Promise<OfferEntity[] | CustomError> {
+    try {
+      const activeDate: Date = new Date(activeDateStr);
+      // Check if the parsing was successful
+      if (isNaN(activeDate.getTime())) {
+        return Promise.resolve(
+          new CustomError(
+            '2398',
+            ERROR_STATUS_CONSTANTS.INVALID_DATE_FORMAT,
+            ERROR_MSG_CONSTANTS.INVALID_DATE_FORMAT,
+          ),
+        );
+      }
+
+      return this.offerService.fetchActiveOffersforAccount(
+        accountId,
+        activeDate,
+      );
+    } catch (error) {
+      return Promise.resolve(
+        new CustomError(
+          '8262',
+          ERROR_STATUS_CONSTANTS.SOMETHING_WENT_WRONG,
+          ERROR_MSG_CONSTANTS.SOMETHING_WENT_WRONG_MSG,
+        ),
+      );
+    }
+  }
+
   @Patch('/:id')
   @CustomErrorInterceptor()
-  updateAccountLimits(
+  updateOfferStatus(
     @Param('id') id: string,
     @Body() updateOfferStatusDto: UpdateOfferStatusDto,
-  ): Promise<boolean | CustomError> {
+  ): Promise<string | CustomError> {
     return this.offerService.updateOfferStatus(updateOfferStatusDto.status, id);
   }
 }
