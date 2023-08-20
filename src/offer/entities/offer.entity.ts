@@ -9,13 +9,13 @@ import {
 import { AccountEntity } from '../../account/entities/account.entity';
 import { LimitTypeEnum, OfferStatusEnum } from '../enum/offer.enum';
 
-@Entity()
+@Entity('offers')
 export class OfferEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(() => AccountEntity, { nullable: false })
-  @JoinColumn()
+  @JoinColumn({ name: 'account_id' })
   account_id: AccountEntity;
 
   @Column({

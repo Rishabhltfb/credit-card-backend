@@ -16,7 +16,7 @@ export class AccountEntity {
   account_id: string;
 
   @OneToOne(() => UserEntity, { nullable: false })
-  @JoinColumn()
+  @JoinColumn({ name: 'customer_id' })
   customer_id: UserEntity;
 
   @Column({ type: 'numeric', nullable: false })
