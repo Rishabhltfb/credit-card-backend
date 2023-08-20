@@ -1,58 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomError } from 'src/error/error.interface';
 import { CreateAccountDto } from '../dtos/account.dto';
 import { AccountRepository } from '../repository/account.repository';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { UserRepository } from 'src/user/repository/user.respository';
+import { AccountEntity } from '../entities/account.entity';
+import {
+  ERROR_MSG_CONSTANTS,
+  ERROR_STATUS_CONSTANTS,
+} from 'src/util/constant/error.constant';
 
 @Injectable()
 export class AccountService {
+  private logger = new Logger(AccountService.name);
   constructor(
     @InjectRepository(AccountRepository)
     private accountRepository: AccountRepository,
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
   ) {}
 
-  //   getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
-  //     return this.AccountRepository.getTasks(filterDto, user);
-  //   }
-
-  //   async getAccountById(accountId: string, user: User): Promise<Task> {
-  //     const found = await this.AccountRepository.findOne({ where: { id, user } });
-  //     if (!found) {
-  //       throw new NotFoundException(`Task with ID "${id}" not found.`);
-  //     }
-  //     return found;
-  //   }
-
-  //   async deleteTask(id: string, user: User): Promise<void> {
-  //     const result = await this.AccountRepository.delete({ id, user });
-  //     console.log(result);
-  //     if (result.affected === 0) {
-  //       throw new NotFoundException(`Task with ID "${id}" not found`);
-  //     }
-  //   }
-
-  //   async updateTaskStatus(
-  //     id: string,
-  //     status: TaskStatus,
-  //     user: User,
-  //   ): Promise<Task> {
-  //     const task: Task = await this.getTaskById(id, user);
-  //     task.status = status;
-  //     this.AccountRepository.save(task);
-  //     return task;
-  //   }
+  public async fetchAccountById(
+    accountId: string,
+  ): Promise<AccountEntity | CustomError> {
+    const account = await this.accountRepository.findAccountById(accountId);
+    return account;
+  }
 
   public async createAccount(
     createAccountDto: CreateAccountDto,
-  ): Promise<void | CustomError> {
+  ): Promise<AccountEntity | CustomError> {
     const isValidData: boolean = this.accountCreationChecks(createAccountDto);
     if (!isValidData)
       return new CustomError(
         '2736',
-        'VALIDATION_FAILED',
-        'Account creation checks failed!',
+        ERROR_STATUS_CONSTANTS.VALIDATION_FAILED,
+        ERROR_MSG_CONSTANTS.ACCOUNT_CREATION_FAILED,
       );
-    return this.accountRepository.createAccount(createAccountDto);
+    const { customerId: customer_id } = createAccountDto;
+    const customer: UserEntity = await this.userRepository.findUserById(
+      customer_id,
+    );
+    if (!customer) {
+      return new CustomError(
+        '2737',
+        ERROR_STATUS_CONSTANTS.CUSTOMER_NOT_FOUND,
+        ERROR_MSG_CONSTANTS.CUSTOMER_NOT_FOUND,
+      );
+    }
+    return this.accountRepository.createAccount(createAccountDto, customer);
   }
 
   private accountCreationChecks(createAccountDto: CreateAccountDto): boolean {
