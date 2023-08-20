@@ -29,7 +29,10 @@ export class OfferRepository extends Repository<OfferEntity> {
 
   async findOfferById(offerId: string): Promise<OfferEntity | CustomError> {
     try {
-      return await this.offerModel.findOne({ id: offerId });
+      return await this.offerModel.findOne({
+        where: { id: offerId },
+        relations: ['account_id'], // Specify the relation to be populated
+      });
     } catch (error) {
       this.logger.error(
         `Failed to find offer: ${JSON.stringify(offerId)} err: ${error}`,

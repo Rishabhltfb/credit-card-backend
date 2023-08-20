@@ -21,7 +21,10 @@ export class AccountRepository extends Repository<AccountEntity> {
     accountId: string,
   ): Promise<AccountEntity | CustomError> {
     try {
-      return await this.accountModel.findOne({ account_id: accountId });
+      return await this.accountModel.findOne({
+        where: { account_id: accountId },
+        relations: ['customer_id'],
+      });
     } catch (error) {
       this.logger.error(
         `Failed to find account: ${JSON.stringify(accountId)} err: ${error}`,

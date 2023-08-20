@@ -46,7 +46,8 @@ export class OfferController {
     @Query('activeDate') activeDateStr: string,
   ): Promise<OfferEntity[] | CustomError> {
     try {
-      const activeDate: Date = new Date(activeDateStr);
+      const activeDate: Date =
+        activeDateStr != null ? new Date(activeDateStr) : new Date();
       // Check if the parsing was successful
       if (isNaN(activeDate.getTime())) {
         return Promise.resolve(
