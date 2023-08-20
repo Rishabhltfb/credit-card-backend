@@ -35,6 +35,12 @@ export class AccountRepository extends Repository<AccountEntity> {
     }
   }
 
+  async updateAccount(
+    newAccountDetails: AccountEntity,
+  ): Promise<AccountEntity> {
+    return this.accountModel.save(newAccountDetails);
+  }
+
   async createAccount(
     createAccountDto: CreateAccountDto,
     customer: UserEntity,

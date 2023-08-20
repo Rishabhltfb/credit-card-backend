@@ -1,7 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomError } from 'src/error/error.interface';
-import { CreateAccountDto } from '../dtos/account.dto';
+import { CreateAccountDto, UpdateAccountDto } from '../dtos/account.dto';
 import { AccountRepository } from '../repository/account.repository';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { UserRepository } from 'src/user/repository/user.respository';
@@ -26,6 +30,69 @@ export class AccountService {
   ): Promise<AccountEntity | CustomError> {
     const account = await this.accountRepository.findAccountById(accountId);
     return account;
+  }
+
+  public async updateAccountLimits(
+    accountId: string,
+    updateAccountDto: UpdateAccountDto,
+  ) {
+    try {
+      const { newAccountLimit, newPerTransactionLimit } = updateAccountDto;
+      const currentAccountDetails = await this.fetchAccountById(accountId);
+      if (currentAccountDetails instanceof CustomError)
+        return currentAccountDetails;
+      if (newAccountLimit != null && newAccountLimit !== undefined) {
+        if (
+          !this.checkGreater(
+            currentAccountDetails.account_limit,
+            newAccountLimit,
+          )
+        ) {
+          return new CustomError(
+            '1234',
+            ERROR_STATUS_CONSTANTS.LESS_ACCOUNT_LIMIT,
+            ERROR_MSG_CONSTANTS.LESS_ACCOUNT_LIMIT_MSG,
+          );
+        }
+        currentAccountDetails.last_account_limit =
+          currentAccountDetails.account_limit;
+        currentAccountDetails.account_limit = newAccountLimit;
+        currentAccountDetails.account_limit_update_time = new Date();
+      }
+      if (
+        newPerTransactionLimit != null &&
+        newPerTransactionLimit !== undefined
+      ) {
+        if (
+          !this.checkGreater(
+            currentAccountDetails.per_transaction_limit,
+            newPerTransactionLimit,
+          )
+        ) {
+          return new CustomError(
+            '2399',
+            ERROR_STATUS_CONSTANTS.LESS_PER_TRANSACTION_LIMIT,
+            ERROR_MSG_CONSTANTS.LESS_PER_TRANSACTION_LIMIT_MSG,
+          );
+        }
+        currentAccountDetails.last_per_transaction_limit =
+          currentAccountDetails.per_transaction_limit;
+        currentAccountDetails.per_transaction_limit = newPerTransactionLimit;
+        currentAccountDetails.per_transaction_limit_update_time = new Date();
+      }
+
+      const newAccountDetails = await this.accountRepository.updateAccount(
+        currentAccountDetails,
+      );
+      return newAccountDetails;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  private checkGreater(oldLimit: number, newLimit: number): boolean {
+    return newLimit > oldLimit;
   }
 
   public async createAccount(

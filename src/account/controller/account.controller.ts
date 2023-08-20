@@ -1,6 +1,14 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CustomError } from 'src/error/error.interface';
-import { CreateAccountDto } from '../dtos/account.dto';
+import { CreateAccountDto, UpdateAccountDto } from '../dtos/account.dto';
 import { AccountService } from '../services/account.service';
 import { AccountEntity } from '../entities/account.entity';
 
@@ -23,5 +31,13 @@ export class AccountController {
   ): Promise<AccountEntity | CustomError> {
     this.logger.debug(accountId);
     return this.accountService.fetchAccountById(accountId);
+  }
+
+  @Patch('/:id')
+  updateAccountLimits(
+    @Param('id') id: string,
+    @Body() updateAccountDto: UpdateAccountDto,
+  ): Promise<AccountEntity | CustomError> {
+    return this.accountService.updateAccountLimits(id, updateAccountDto);
   }
 }
