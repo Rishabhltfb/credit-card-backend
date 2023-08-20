@@ -13,7 +13,7 @@ import { UserEntity } from '../../user/entities/user.entity';
 @Unique(['customer_id'])
 export class AccountEntity {
   @PrimaryGeneratedColumn()
-  account_id: number;
+  account_id: string;
 
   @OneToOne(() => UserEntity, { nullable: false })
   @JoinColumn()
